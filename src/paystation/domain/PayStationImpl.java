@@ -102,7 +102,8 @@ public class PayStationImpl implements PayStation {
     @Override
     public int empty() {
            
-        int amountBeingEmptied = machineTotal.get(5) + machineTotal.get(10) + machineTotal.get(25);
+        int amountBeingEmptied = (machineTotal.get(5) * 5) + (machineTotal.get(10) * 10) 
+                + (machineTotal.get(25) * 25);
         
         //clear the map
         machineTotal.put(5, 0);
@@ -114,7 +115,8 @@ public class PayStationImpl implements PayStation {
     
     @Override
     public int getMachineTotal() {
-        return machineTotal.get(5) + machineTotal.get(10) + machineTotal.get(25);
+        return (machineTotal.get(5) * 5) + (machineTotal.get(10) * 10) 
+                + (machineTotal.get(25) * 25);
     }
     
     @Override
