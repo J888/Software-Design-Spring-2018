@@ -14,8 +14,10 @@ package paystation.domain;
 
 public class ReceiptImpl implements Receipt {
 
+    
     private int value;
 
+    
     public ReceiptImpl(int value) {
         this.value = value;
     }
@@ -24,4 +26,6 @@ public class ReceiptImpl implements Receipt {
     public int value() {
         return value;
     }
+    
+    
 }

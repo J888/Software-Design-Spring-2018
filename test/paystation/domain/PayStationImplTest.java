@@ -11,6 +11,8 @@
  */
 package paystation.domain;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -138,4 +140,156 @@ public class PayStationImplTest {
         assertEquals("Insert after cancel should work",
                 10, ps.readDisplay());
     }
+    
+    
+    
+    
+    
+    
+    /* --------START MY TEST CASES FOR LAB------------- */
+    
+    // CALL TO EMPTY RETURNS TOTAL AMT ENTERED
+    @Test 
+    public void shouldReturnTotalEntered()
+            throws IllegalCoinException {
+        ps.addPayment(10);
+        ps.addPayment(5);
+        ps.addPayment(5);
+        assertEquals("Empty should return total amount entered",
+                10+5+5, ps.empty());
+    }
+    
+    
+    
+    // A CANCELLED ENTRY IS REMOVED FROM (DOES NOT ADD TO) WHAT EMPTY RETURNS
+    @Test
+    public void shouldNotAddToEmpty()
+            throws IllegalCoinException {
+        ps.addPayment(10);
+        ps.addPayment(5);
+        ps.addPayment(5);
+        
+        ps.cancel();
+        
+        assertEquals("Cancelled amount should not be empty-able",
+                0, ps.empty());
+    }
+    
+    
+    // CALL TO EMPTY RESETS THE TOTAL TO ZERO
+    @Test
+    public void shouldResetTotalAfterEmpty()
+            throws IllegalCoinException {
+        
+        ps.addPayment(10);
+        ps.addPayment(5);
+        ps.addPayment(5);
+        
+        ps.empty();
+        
+        assertEquals("Empty should reset the machine total to 0",
+                0, ps.getMachineTotal());
+        
+    }
+    
+   
+    // CALL TO CANCEL RETURNS A MAP CONTAINING ONE COIN ENTERED
+    @Test
+    public void shouldReturnOneCoinAfterCancel()
+            throws IllegalCoinException {
+        ps.addPayment(10);
+        
+        Map<Integer, Integer> test = new HashMap<>();
+        test.put(5, 0);
+        test.put(10, 1);
+        test.put(25, 0);
+        
+        assertEquals("Cancel should return a map containing 1 coin entered",
+                test, ps.cancel());
+    }
+    
+    
+    // CALL TO CANCEL RETURNS A MAP CONTAINING A MIX OF COINS ENTERED
+    @Test
+    public void shouldReturnMixOfCoinsAfterCancel()
+            throws IllegalCoinException {
+        ps.addPayment(10);
+        ps.addPayment(10);
+        ps.addPayment(5);
+        ps.addPayment(25);
+        
+        Map<Integer, Integer> test = new HashMap<>();
+        test.put(5, 1);
+        test.put(10, 2);
+        test.put(25, 1);
+        
+        assertEquals("Cancel should return a map containing a mix of coins entered",
+                test, ps.cancel());
+    }
+    
+    
+    
+    // CALL TO CANCEL DOES NOT CONTAIN KEY FOR A COIN THAT WAS NOT ENTERED
+    @Test
+    public void shouldReturnNoValueForCoinNotEntered()
+            throws IllegalCoinException {
+        ps.addPayment(10);
+        ps.addPayment(25);
+        
+        Map<Integer, Integer> test = new HashMap<>();
+        test.put(5, 0);
+        test.put(10, 1);
+        test.put(25, 1);
+        
+        assertEquals("Cancel should not contain a key for a coin that was not entered",
+                test, ps.cancel());
+    }
+    
+    
+    // CALL TO CANCEL CLEARS MAP
+    @Test
+    public void shouldClearMapAfterCancel()
+            throws IllegalCoinException {
+        ps.addPayment(25);
+        ps.addPayment(25);
+        ps.addPayment(25);
+        ps.addPayment(10);
+        ps.addPayment(10);
+        ps.addPayment(5);
+        
+        ps.cancel();
+        
+        Map<Integer, Integer> test = new HashMap<>();
+        test.put(5, 0);
+        test.put(10, 0);
+        test.put(25, 0);
+        
+        assertEquals("Cancel should clear the map",
+                test, ps.getPutInByCustomerMap());
+    }
+    
+    
+    // CALL TO BUY CLEARS MAP
+    @Test
+    public void shouldClearMapAfterBuy()
+            throws IllegalCoinException {
+        ps.addPayment(25);
+        ps.addPayment(25);
+        ps.addPayment(25);
+        ps.addPayment(10);
+        ps.addPayment(10);
+        ps.addPayment(5);
+        
+        ps.cancel();
+        
+        Map<Integer, Integer> test = new HashMap<>();
+        test.put(5, 0);
+        test.put(10, 0);
+        test.put(25, 0);
+        
+        assertEquals("Cancel should clear the map",
+                test, ps.getPutInByCustomerMap());
+    }
+    
+    
 }
