@@ -6,21 +6,7 @@ import java.util.Map;
 /**
  * Implementation of the pay station.
  *
- * Responsibilities:
- *
- * 1) Accept payment; 
- * 2) Calculate parking time based on payment; 
- * 3) Know earning, parking time bought; 
- * 4) Issue receipts; 
- * 5) Handle buy and cancel events.
- *
- * This source code is from the book "Flexible, Reliable Software: Using
- * Patterns and Agile Development" published 2010 by CRC Press. Author: Henrik B
- * Christensen Computer Science Department Aarhus University
- *
- * This source code is provided WITHOUT ANY WARRANTY either expressed or
- * implied. You may study, use, modify, and distribute it for non-commercial
- * purposes. For any commercial use, see http://www.baerbak.com/
+
  */
 public class PayStationImpl implements PayStation {
     
@@ -73,7 +59,7 @@ public class PayStationImpl implements PayStation {
     @Override
     public Receipt buy() {
         Receipt r = new ReceiptImpl(timeBought);
-        reset();
+        reset(false);
         return r;
     }
 
@@ -84,13 +70,26 @@ public class PayStationImpl implements PayStation {
        
         giveBackToCustomer = putInByCustomer;
         
-        reset();
+        reset(true);
         
         return giveBackToCustomer;
     }
     
-    private void reset() {
+    
+    //happens after the customer cancels their transaction
+    // or buys
+    private void reset(boolean cancelled) {
+        
         timeBought = insertedSoFar = 0;
+        
+        if(cancelled){
+            //take away from the machine total
+            machineTotal.put(5, machineTotal.get(5) - putInByCustomer.get(5));
+            machineTotal.put(10, machineTotal.get(10) - putInByCustomer.get(10));
+            machineTotal.put(25, machineTotal.get(25) - putInByCustomer.get(25));
+        }
+        
+        //reset how much the customer has put in
         putInByCustomer.put(5, 0);
         putInByCustomer.put(10, 0);
         putInByCustomer.put(25, 0);
@@ -107,7 +106,6 @@ public class PayStationImpl implements PayStation {
         machineTotal.put(5, 0);
         machineTotal.put(10, 0);
         machineTotal.put(25, 0);
-        
         
         return amountBeingEmptied;
     }
