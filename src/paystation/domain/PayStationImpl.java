@@ -68,7 +68,9 @@ public class PayStationImpl implements PayStation {
     public Map<Integer, Integer> cancel() {
         Map<Integer, Integer> giveBackToCustomer = new HashMap<>();
        
-        giveBackToCustomer = putInByCustomer;
+        giveBackToCustomer.put(5, putInByCustomer.get(5));
+        giveBackToCustomer.put(10, putInByCustomer.get(10));
+        giveBackToCustomer.put(25, putInByCustomer.get(25));
         
         reset(true);
         
